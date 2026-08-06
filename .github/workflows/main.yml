@@ -1,0 +1,105 @@
+name: ci
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+    inputs:
+      item_id:
+        description: "optional"
+        required: false
+        default: ""
+      quality:
+        description: "best / 1080 / 720 / 360"
+        required: false
+        default: "best"
+      target:
+        description: "label"
+        required: false
+        default: ""
+      dry_run:
+        description: "preview only"
+        required: false
+        default: "false"
+      no_fallback:
+        description: "true = sirf pyrogram, telethon fallback band"
+        required: false
+        default: "false"
+      mode:
+        description: "ordered / random / popular"
+        required: false
+        default: "ordered"
+      lang_mode:
+        description: "hindi_only / all"
+        required: false
+        default: "hindi_only"
+      split_part_mb:
+        description: "split part size MB (test override)"
+        required: false
+        default: ""
+  repository_dispatch:
+    types: [run-task, relay-task]
+concurrency:
+  group: run-task
+  cancel-in-progress: false
+permissions:
+  contents: write
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: setup
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: pip cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            pip-${{ runner.os }}-
+      - name: deps
+        run: pip install -r requirements.txt
+      - name: ffmpeg
+        run: sudo apt-get update -q && sudo apt-get install -y -q ffmpeg aria2
+      - name: execute
+        env:
+          KEY_1: ${{ secrets.KEY_1 }}
+          KEY_2: ${{ secrets.KEY_2 }}
+          KEY_3: ${{ secrets.KEY_3 }}
+          KEY_4: ${{ secrets.KEY_4 }}
+          KEY_5: ${{ secrets.KEY_5 }}
+          KEY_6: ${{ secrets.KEY_6 }}
+          KEY_7: ${{ secrets.KEY_7 }}
+          KEY_8: ${{ secrets.KEY_8 }}
+          KEY_9: ${{ secrets.KEY_9 }}
+          KEY_10: ${{ secrets.KEY_10 }}
+          KEY_11: ${{ secrets.KEY_11 }}
+          KEY_12: ${{ secrets.KEY_12 }}
+          KEY_13: ${{ secrets.KEY_13 }}
+          KEY_14: ${{ secrets.KEY_14 }}
+          KEY_15: ${{ secrets.KEY_15 }}
+          KEY_16: ${{ secrets.KEY_16 }}
+          KEY_17: ${{ secrets.KEY_17 }}
+          KEY_18: ${{ secrets.KEY_18 }}
+          KEY_19: ${{ secrets.KEY_19 }}
+          KEY_20: ${{ secrets.KEY_20 }}
+          KEY_21: ${{ secrets.KEY_21 }}
+          ITEM_ID: ${{ inputs.item_id }}
+          QUALITY: ${{ inputs.quality }}
+          TARGET: ${{ inputs.target }}
+          DRY_RUN: ${{ inputs.dry_run }}
+          NO_FALLBACK: ${{ inputs.no_fallback }}
+          CONCURRENCY: ${{ secrets.CONCURRENCY }}
+          SPLIT_PART_MB: ${{ inputs.split_part_mb }}
+          MODE: ${{ inputs.mode }}
+          LANG_MODE: ${{ inputs.lang_mode }}
+          PRIORITY: ${{ secrets.PRIORITY }}
+          RELAY_ID: ${{ github.event.client_payload.id }}
+          RELAY_MODE: ${{ github.event.action }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python app.py
