@@ -1,7 +1,5 @@
 name: ci
 on:
-  schedule:
-    - cron: "*/5 * * * *"
   workflow_dispatch:
     inputs:
       item_id:
