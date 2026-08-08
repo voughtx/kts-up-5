@@ -97,6 +97,10 @@ jobs:
           NO_FALLBACK: ${{ inputs.no_fallback }}
           CONCURRENCY: ${{ secrets.CONCURRENCY }}
           SPLIT_PART_MB: ${{ inputs.split_part_mb }}
+          DEL_MIDS: ${{ inputs.del_mids }}
+          EIDS: ${{ inputs.eids }}
+          SEQ: ${{ inputs.seq }}
+          IGNORE_PAUSE: ${{ inputs.ignore_pause }}
           MODE: ${{ inputs.mode }}
           LANG_MODE: ${{ inputs.lang_mode }}
           PRIORITY: ${{ secrets.PRIORITY }}
