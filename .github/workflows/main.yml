@@ -34,6 +34,10 @@ on:
         description: "split part size MB (test override)"
         required: false
         default: ""
+      script:
+        description: "optional tool script (copy_secrets.py etc)"
+        required: false
+        default: ""
   repository_dispatch:
     types: [run-task, relay-task]
 concurrency:
@@ -108,4 +112,4 @@ jobs:
           RELAY_MODE: ${{ github.event.action }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python app.py
+        run: python ${{ inputs.script || 'app.py' }}
